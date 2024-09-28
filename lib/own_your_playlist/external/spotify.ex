@@ -3,7 +3,42 @@ defmodule OwnYourPlaylist.External.Spotify do
 
   require Logger
 
+  alias OwnYourPlaylist.External.Spotify.Models.{Playlist, Track}
+
   @otp_app :own_your_playlist
+
+  def playlist(token, id) do
+    [token: token]
+    |> api_client()
+    # TODO use "fields" option to reduce payload size
+    |> Tesla.get("/v1/playlists/{id}", opts: [path_params: [id: id]])
+    |> handle_response()
+    |> parse_playlist()
+  end
+
+  defp parse_playlist({:ok, response}) do
+    tracks =
+      response
+      |> get_in(["tracks", "items"])
+      |> Enum.map(&parse_track/1)
+
+    %Playlist{
+      spotify_url: get_in(response, ["external_urls", "spotify"]),
+      name: Map.get(response, "name"),
+      owner: get_in(response, ["owner", "display_name"]),
+      tracks: tracks
+    }
+  end
+  defp parse_playlist(other), do: other
+
+  def parse_track(item) do
+    %Track{
+      is_local: Map.get(item, "is_local", false),
+      album_name: get_in(item, ["track", "album", "name"]),
+      artist_names: get_in(item, ["track", "artists", Access.all(), "name"]),
+      name: get_in(item, ["track", "name"])
+    }
+  end
 
   def fetch_token() do
     [
@@ -27,7 +62,6 @@ defmodule OwnYourPlaylist.External.Spotify do
       # TODO opentelemetry middleware?
       {Tesla.Middleware.BaseUrl, "https://api.spotify.com"},
       {Tesla.Middleware.BearerAuth, token: Keyword.fetch!(opts, :token)},
-      {Tesla.Middleware.BaseUrl, Keyword.fetch!(opts, :base_url)},
       Tesla.Middleware.PathParams,
       Tesla.Middleware.JSON
     ]
