@@ -52,7 +52,11 @@ defmodule OwnYourPlaylist.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+
+      # HTTP Client
+      {:tesla, "~> 1.12"},
+      {:finch, "~> 0.19.0"},
     ]
   end
 

@@ -11,6 +11,7 @@ defmodule OwnYourPlaylist.Application do
       OwnYourPlaylistWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:own_your_playlist, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: OwnYourPlaylist.PubSub},
+      OwnYourPlaylist.Finch,
       # Start a worker by calling: OwnYourPlaylist.Worker.start_link(arg)
       # {OwnYourPlaylist.Worker, arg},
       # Start to serve requests, typically the last entry
