@@ -32,12 +32,18 @@ defmodule OwnYourPlaylist.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # Web Server
       {:phoenix, "~> 1.7.14"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # TODO bump on release to {:phoenix_live_view, "~> 1.0.0"},
       {:phoenix_live_view, "~> 1.0.0-rc.1", override: true},
-      {:floki, ">= 0.30.0", only: :test},
+      {:gettext, "~> 0.20"},
+      {:jason, "~> 1.2"},
+      {:dns_cluster, "~> 0.1.1"},
+      {:bandit, "~> 1.5"},
+
+      # Assets
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:heroicons,
@@ -47,16 +53,18 @@ defmodule OwnYourPlaylist.MixProject do
        app: false,
        compile: false,
        depth: 1},
+
+      # Telemetry
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.20"},
-      {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"},
+      {:logger_json, "~> 6.2"},
 
       # HTTP Client
       {:tesla, "~> 1.12"},
       {:finch, "~> 0.19.0"},
+
+      # Test
+      {:floki, ">= 0.30.0", only: :test},
     ]
   end
 
