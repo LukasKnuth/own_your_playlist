@@ -17,7 +17,7 @@ defmodule OwnYourPlaylistWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import OwnYourPlaylistWeb.Gettext
+  use Gettext, backend: OwnYourPlaylistWeb.Gettext
 
   @doc """
   Renders a modal.

@@ -43,7 +43,7 @@ defmodule OwnYourPlaylistWeb do
         layouts: [html: OwnYourPlaylistWeb.Layouts]
 
       import Plug.Conn
-      import OwnYourPlaylistWeb.Gettext
+      use Gettext, backend: OwnYourPlaylist.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +85,7 @@ defmodule OwnYourPlaylistWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import OwnYourPlaylistWeb.CoreComponents
-      import OwnYourPlaylistWeb.Gettext
+      use Gettext, backend: OwnYourPlaylist.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

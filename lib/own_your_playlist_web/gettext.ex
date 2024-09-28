@@ -5,7 +5,7 @@ defmodule OwnYourPlaylistWeb.Gettext do
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import OwnYourPlaylistWeb.Gettext
+      use Gettext, backend: OwnYourPlaylistWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -20,5 +20,5 @@ defmodule OwnYourPlaylistWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :own_your_playlist
+  use Gettext.Backend, otp_app: :own_your_playlist
 end
