@@ -13,13 +13,20 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
     client()
     |> Tesla.get("/catalog/search/autosuggest", query: [q: to_query(track)])
     |> handle_response()
-    |> parse_result()
+    |> parse()
   end
 
-  defp parse_result({:ok, body}) do
+  defp parse({:ok, body}) do
     # TODO how do we handle uncertainty with the results? More than one?
-    track = get_in(body, ["tracks", Access.at(0)])
-    %CatalogueEntry{
+    body
+    |> get_in(["tracks", Access.at(0)])
+    |> parse_result()
+  end
+  defp parse(other), do: other
+
+  defp parse_result(nil), do: {:error, :not_found}
+  defp parse_result(track) do
+    {:ok, %CatalogueEntry{
       album_artist: Map.get(track, "artist"),
       album_name: Map.get(track, "album"),
       track_name: Map.get(track, "title"),
@@ -29,9 +36,8 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
         description: "High Quality MP3",
         shop_url: Map.get(track, "url")
       }]
-    }
+    }}
   end
-  defp parse_result(other), do: other
 
   defp to_query(%Track{artist_names: [main_artist | _], album_name: album, name: name}) do
     "#{main_artist} #{album} #{name}"

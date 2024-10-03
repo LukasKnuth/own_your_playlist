@@ -27,13 +27,13 @@ defmodule OwnYourPlaylist.Streamer.Spotify.Api do
       # TODO just filter `is_local` tracks here? Or show in UI?
       |> Enum.map(&parse_track/1)
 
-    %Playlist{
+    {:ok, %Playlist{
       id: Map.fetch!(response, "id"),
       external_url: get_in(response, ["external_urls", "spotify"]),
       name: Map.get(response, "name"),
       owner: get_in(response, ["owner", "display_name"]),
       tracks: tracks
-    }
+    }}
   end
   defp parse_playlist(other), do: other
 

@@ -20,26 +20,32 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
     client()
     |> Tesla.get("/track/search", query: query)
     |> handle_response()
-    |> parse_result()
+    |> parse()
   end
 
-  defp parse_result({:ok, body}) do
-    track = get_in(body, ["searchResults", "searchResult", Access.at(0), "track"])
-    shop_url = to_url(track)
-    %CatalogueEntry{
-      track_name: Map.get(track, "title"),
-      album_name: get_in(track, ["release", "title"]),
-      album_artist: get_in(track, ["release", "artist", "name"]),
-      purchase_options: Enum.map(get_in(track, ["download", "packages"]), &parse_option(&1, shop_url))
-    }
+  defp parse({:ok, body}) do
+    body
+    |> get_in(["searchResults", "searchResult", Access.at(0), "track"])
+    |> parse_result()
   end
-  defp parse_result(other), do: other
+  defp parse(other), do: other
 
   defp to_url(track) do
     artist_slug = get_in(track, ["release", "artist", "slug"])
     release_slug = get_in(track, ["release", "slug"])
     # TODO build dynamically with correct shop region!
     "https://de.7digital.com/artist/#{artist_slug}/release/#{release_slug}"
+  end
+
+  defp parse_result(nil), do: {:error, :not_found}
+  defp parse_result(track) do
+    shop_url = to_url(track)
+    {:ok, %CatalogueEntry{
+      track_name: Map.get(track, "title"),
+      album_name: get_in(track, ["release", "title"]),
+      album_artist: get_in(track, ["release", "artist", "name"]),
+      purchase_options: Enum.map(get_in(track, ["download", "packages"]), &parse_option(&1, shop_url))
+    }}
   end
 
   defp parse_option(package, shop_url) do
