@@ -1,4 +1,4 @@
-defmodule OwnYourPlaylist.External.SevenDigital do
+defmodule OwnYourPlaylist.Catalogue.SevenDigital do
 	@moduledoc """
   A client for the (Private) 7digital Catalogue API.
   """

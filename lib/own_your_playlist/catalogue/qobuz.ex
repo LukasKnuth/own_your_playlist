@@ -1,4 +1,4 @@
-defmodule OwnYourPlaylist.External.Qobuz do
+defmodule OwnYourPlaylist.Catalogue.Qobuz do
 	@moduledoc """
   Interact with the (Private) API of the [Qobuz](https://www.qobuz.com/) music
   service.

@@ -12,10 +12,8 @@ defmodule OwnYourPlaylist.Application do
       {DNSCluster, query: Application.get_env(:own_your_playlist, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: OwnYourPlaylist.PubSub},
       OwnYourPlaylist.Finch,
-      # Start a worker by calling: OwnYourPlaylist.Worker.start_link(arg)
-      # {OwnYourPlaylist.Worker, arg},
-      # Start to serve requests, typically the last entry
-      OwnYourPlaylistWeb.Endpoint
+      {Task.Supervisor, name: OwnYourPlaylist.Async},
+      OwnYourPlaylistWeb.Endpoint,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
