@@ -64,10 +64,15 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
 
   defp client() do
     [
+      {Tesla.Middleware.Retry, delay: 200, max_retries: 3, should_retry: &should_retry/1},
       {Tesla.Middleware.BaseUrl, @api_url},
       {Tesla.Middleware.Headers, [{"accept", "application/json"}]},
       Tesla.Middleware.JSON
     ]
     |> Tesla.client()
   end
+
+  defp should_retry({:error, _reason}), do: true
+  defp should_retry({:ok, %{status: status}}) when status >= 400, do: true
+  defp should_retry(_), do: false
 end
