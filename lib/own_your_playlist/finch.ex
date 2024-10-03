@@ -10,7 +10,7 @@ defmodule OwnYourPlaylist.Finch do
     Finch.child_spec(custom_options(opts))
   end
 
-  defp custom_options(_opts) do
-    [name: __MODULE__]
+  defp custom_options(opts) do
+    Keyword.merge(opts, [name: __MODULE__])
   end
 end
