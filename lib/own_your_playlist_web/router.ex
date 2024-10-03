@@ -10,18 +10,11 @@ defmodule OwnYourPlaylistWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", OwnYourPlaylistWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live_session :default do
+      live "/", Live.Landing
+    end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", OwnYourPlaylistWeb do
-  #   pipe_through :api
-  # end
 end
