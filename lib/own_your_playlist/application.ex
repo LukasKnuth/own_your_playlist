@@ -10,14 +10,13 @@ defmodule OwnYourPlaylist.Application do
     children = [
       OwnYourPlaylistWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:own_your_playlist, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: OwnYourPlaylist.PubSub},
       OwnYourPlaylist.Finch,
+      OwnYourPlaylist.Streamer.Spotify.TokenJob,
+      {Phoenix.PubSub, name: OwnYourPlaylist.PubSub},
       {Task.Supervisor, name: OwnYourPlaylist.Async},
       OwnYourPlaylistWeb.Endpoint,
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: OwnYourPlaylist.Supervisor]
     Supervisor.start_link(children, opts)
   end
