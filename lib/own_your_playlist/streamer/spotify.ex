@@ -1,11 +1,9 @@
 defmodule OwnYourPlaylist.Streamer.Spotify do
   @moduledoc "Top-level module for interacting with Spotify Web API"
 
-  require Logger
-
+  import OwnYourPlaylist.Util.TeslaResponse
+  alias OwnYourPlaylist.Util.Config
   alias OwnYourPlaylist.Models.{Playlist, Track}
-
-  @otp_app :own_your_playlist
 
   def playlist(token, id) do
     [token: token]
@@ -46,8 +44,8 @@ defmodule OwnYourPlaylist.Streamer.Spotify do
       {Tesla.Middleware.BaseUrl, "https://accounts.spotify.com"},
       {
         Tesla.Middleware.BasicAuth,
-        username: read_config!(:client_id),
-        password: read_config!(:client_secret)
+        username: Config.read!(__MODULE__, :client_id),
+        password: Config.read!(__MODULE__, :client_secret)
       },
       Tesla.Middleware.FormUrlencoded,
       Tesla.Middleware.JSON
@@ -67,25 +65,5 @@ defmodule OwnYourPlaylist.Streamer.Spotify do
       Tesla.Middleware.JSON
     ]
     |> Tesla.client()
-  end
-
-  defp handle_response({:ok, %{status: status, body: body}}) when status >= 200 and status < 300 do
-    {:ok, body}
-  end
-  defp handle_response({:ok, %{status: status, body: body}}) do
-    Logger.error("Spotify response indicates error", status: status, body: body)
-    
-    {:error, {:status, status}}
-  end
-  defp handle_response({:error, _} = err) do
-    Logger.error("Unhandled error in Spotify client", error: err)
-
-    err
-  end
-
-  defp read_config!(key) do
-    @otp_app
-    |> Application.fetch_env!(__MODULE__)
-    |> Keyword.fetch!(key)
   end
 end

@@ -4,18 +4,19 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
   service.
   """
 
-  #@api_url "https://www.qobuz.com/api.json/0.2"
   @api_url "https://www.qobuz.com/v4/de-de"
 
+  import OwnYourPlaylist.Util.TeslaResponse
   alias OwnYourPlaylist.Models.{CatalogueEntry, Track, PurchaseOption}
   
   def find(track) do
     client()
     |> Tesla.get("/catalog/search/autosuggest", query: [q: to_query(track)])
+    |> handle_response()
     |> parse_result()
   end
 
-  defp parse_result({:ok, %{status: status, body: body}}) when status >= 200 and status < 300 do
+  defp parse_result({:ok, body}) do
     # TODO how do we handle uncertainty with the results? More than one?
     track = get_in(body, ["tracks", Access.at(0)])
     %CatalogueEntry{
@@ -30,8 +31,6 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
       }]
     }
   end
-
-  # TODO make this beter.. Reuse from Spotify and have general client?
   defp parse_result(other), do: other
 
   defp to_query(%Track{artist_names: [main_artist | _], album_name: album, name: name}) do

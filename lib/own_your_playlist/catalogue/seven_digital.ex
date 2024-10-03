@@ -2,6 +2,7 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
 	@moduledoc """
   A client for the (Private) 7digital Catalogue API.
   """
+  import OwnYourPlaylist.Util.TeslaResponse
   alias OwnYourPlaylist.Models.PurchaseOption
   alias OwnYourPlaylist.Models.CatalogueEntry
   alias OwnYourPlaylist.Models.Track
@@ -18,10 +19,11 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
     ]
     client()
     |> Tesla.get("/track/search", query: query)
+    |> handle_response()
     |> parse_result()
   end
 
-  defp parse_result({:ok, %{status: status, body: body}}) when status >= 200 and status < 300 do
+  defp parse_result({:ok, body}) do
     track = get_in(body, ["searchResults", "searchResult", Access.at(0), "track"])
     shop_url = to_url(track)
     %CatalogueEntry{
@@ -31,8 +33,6 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
       purchase_options: Enum.map(get_in(track, ["download", "packages"]), &parse_option(&1, shop_url))
     }
   end
-
-  # TODO make this beter.. Reuse from Spotify and have general client?
   defp parse_result(other), do: other
 
   defp to_url(track) do
