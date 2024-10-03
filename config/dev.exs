@@ -42,6 +42,6 @@ config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
 
-config :own_your_playlist, OwnYourPlaylist.External.Spotify,
+config :own_your_playlist, OwnYourPlaylist.Streamer.Spotify,
   client_id: System.get_env("SPOTIFY_CLIENT_ID"),
   client_secret: System.get_env("SPOTIFY_CLIENT_SECRET")

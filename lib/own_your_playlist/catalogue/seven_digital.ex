@@ -3,8 +3,8 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
   A client for the (Private) 7digital Catalogue API.
   """
   alias OwnYourPlaylist.Models.PurchaseOption
-  alias OwnYourPlaylist.External.Spotify.Models.Track
   alias OwnYourPlaylist.Models.CatalogueEntry
+  alias OwnYourPlaylist.Models.Track
 
   @api_url "https://api.7digital.com/1.2"
 

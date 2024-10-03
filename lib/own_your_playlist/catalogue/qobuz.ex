@@ -7,8 +7,7 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
   #@api_url "https://www.qobuz.com/api.json/0.2"
   @api_url "https://www.qobuz.com/v4/de-de"
 
-  alias OwnYourPlaylist.External.Spotify.Models.Track
-  alias OwnYourPlaylist.Models.{CatalogueEntry, PurchaseOption}
+  alias OwnYourPlaylist.Models.{CatalogueEntry, Track, PurchaseOption}
   
   def find(track) do
     client()

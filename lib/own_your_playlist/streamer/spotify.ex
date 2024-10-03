@@ -1,9 +1,9 @@
-defmodule OwnYourPlaylist.External.Spotify do
+defmodule OwnYourPlaylist.Streamer.Spotify do
   @moduledoc "Top-level module for interacting with Spotify Web API"
 
   require Logger
 
-  alias OwnYourPlaylist.External.Spotify.Models.{Playlist, Track}
+  alias OwnYourPlaylist.Models.{Playlist, Track}
 
   @otp_app :own_your_playlist
 
@@ -20,10 +20,12 @@ defmodule OwnYourPlaylist.External.Spotify do
     tracks =
       response
       |> get_in(["tracks", "items"])
+      # TODO just filter `is_local` tracks here? Or show in UI?
       |> Enum.map(&parse_track/1)
 
     %Playlist{
-      spotify_url: get_in(response, ["external_urls", "spotify"]),
+      id: Map.fetch!(response, "id"),
+      external_url: get_in(response, ["external_urls", "spotify"]),
       name: Map.get(response, "name"),
       owner: get_in(response, ["owner", "display_name"]),
       tracks: tracks
@@ -33,7 +35,6 @@ defmodule OwnYourPlaylist.External.Spotify do
 
   def parse_track(item) do
     %Track{
-      is_local: Map.get(item, "is_local", false),
       album_name: get_in(item, ["track", "album", "name"]),
       artist_names: get_in(item, ["track", "artists", Access.all(), "name"]),
       name: get_in(item, ["track", "name"])
