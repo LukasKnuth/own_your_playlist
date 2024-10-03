@@ -50,7 +50,7 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
-  config :own_your_playlist, OwnYourPlaylist.Streamer.Spotify,
+  config :own_your_playlist, OwnYourPlaylist.Streamer.Spotify.Account,
     client_id: System.fetch_env!("SPOTIFY_CLIENT_ID"),
     client_secret: System.fetch_env!("SPOTIFY_CLIENT_SECRET")
 end
