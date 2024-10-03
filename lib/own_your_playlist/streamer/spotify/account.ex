@@ -26,6 +26,7 @@ defmodule OwnYourPlaylist.Streamer.Spotify.Account do
 
   defp client() do
     [
+      {Tesla.Middleware.Timeout, timeout: :timer.seconds(10)},
       {Tesla.Middleware.BaseUrl, "https://accounts.spotify.com"},
       {
         Tesla.Middleware.BasicAuth,

@@ -64,6 +64,7 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
 
   defp client() do
     [
+      {Tesla.Middleware.Timeout, timeout: :timer.seconds(10)},
       {Tesla.Middleware.Retry, delay: 200, max_retries: 3, should_retry: &should_retry/1},
       {Tesla.Middleware.BaseUrl, @api_url},
       {Tesla.Middleware.Headers, [{"accept", "application/json"}]},
