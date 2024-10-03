@@ -7,8 +7,8 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
   #@api_url "https://www.qobuz.com/api.json/0.2"
   @api_url "https://www.qobuz.com/v4/de-de"
 
-  alias OwnYourPlaylist.Models.{Result, PurchaseOption}
   alias OwnYourPlaylist.External.Spotify.Models.Track
+  alias OwnYourPlaylist.Models.{CatalogueEntry, PurchaseOption}
   
   def find(track) do
     client()
@@ -19,7 +19,7 @@ defmodule OwnYourPlaylist.Catalogue.Qobuz do
   defp parse_result({:ok, %{status: status, body: body}}) when status >= 200 and status < 300 do
     # TODO how do we handle uncertainty with the results? More than one?
     track = get_in(body, ["tracks", Access.at(0)])
-    %Result{
+    %CatalogueEntry{
       album_artist: Map.get(track, "artist"),
       album_name: Map.get(track, "album"),
       track_name: Map.get(track, "title"),

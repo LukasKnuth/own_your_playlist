@@ -3,8 +3,8 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
   A client for the (Private) 7digital Catalogue API.
   """
   alias OwnYourPlaylist.Models.PurchaseOption
-  alias OwnYourPlaylist.Models.Result
   alias OwnYourPlaylist.External.Spotify.Models.Track
+  alias OwnYourPlaylist.Models.CatalogueEntry
 
   @api_url "https://api.7digital.com/1.2"
 
@@ -24,7 +24,7 @@ defmodule OwnYourPlaylist.Catalogue.SevenDigital do
   defp parse_result({:ok, %{status: status, body: body}}) when status >= 200 and status < 300 do
     track = get_in(body, ["searchResults", "searchResult", Access.at(0), "track"])
     shop_url = to_url(track)
-    %Result{
+    %CatalogueEntry{
       track_name: Map.get(track, "title"),
       album_name: get_in(track, ["release", "title"]),
       album_artist: get_in(track, ["release", "artist", "name"]),

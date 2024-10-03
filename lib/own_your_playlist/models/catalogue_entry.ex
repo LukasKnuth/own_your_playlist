@@ -1,7 +1,6 @@
-defmodule OwnYourPlaylist.Models.Result do
+defmodule OwnYourPlaylist.Models.CatalogueEntry do
   @moduledoc """
   A single purchasable result from any Music Catalogue.
-  # TODO Refactor name and folder
   """
 
   @enforce_keys [:album_artist, :album_name, :track_name, :purchase_options]

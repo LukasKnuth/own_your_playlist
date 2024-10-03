@@ -2,9 +2,8 @@ defmodule OwnYourPlaylist.Catalogue do
   @moduledoc """
   Main ineraction point with any external catalogues to buy and own music from.
   """
-  alias OwnYourPlaylist.Models.Result
+  alias OwnYourPlaylist.Models.CatalogueEntry
   alias Phoenix.PubSub
-  alias OwnYourPlaylist.Models.PurchaseOption
   alias OwnYourPlaylist.Async
   alias OwnYourPlaylist.Catalogue.{Qobuz, SevenDigital}
 
@@ -40,10 +39,10 @@ defmodule OwnYourPlaylist.Catalogue do
   defp find_in({track, catalogue}), do: catalogue.find(track)
 
   # TODO they should have easier IDs...
-  defp publish_result(topic, {:ok, %Result{} = result}) do
+  defp publish_result(topic, {:ok, %CatalogueEntry{} = result}) do
     PubSub.broadcast(@pubsub, topic, {:found, "song_id", "catalogue_id", result})
   end
-  defp publish_result(topic, {:error, reason}) do
+  defp publish_result(topic, {:error, _reason}) do
     PubSub.broadcast(@pubsub, topic, {:fail, "song_id", "catalogue_id"})
   end
 end
